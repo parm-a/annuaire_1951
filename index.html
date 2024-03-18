@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- <meta charset="UTF-8"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rechercher des propriétaires à Paris dans l'Annuaire de 1951-52</title>
+<style>
+    #result {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+<h1>Rechercher des propriétaires à Paris dans l'Annuaire de 1951-52</h1>
+<input type="text" id="searchInput" placeholder="Search for .txt files">
+<button onclick="searchFiles()">Search</button>
+<div id="result"></div>
+
+<script>
+    function searchFiles() {
+        var searchText = document.getElementById("searchInput").value.trim().toLowerCase();
+        var resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = '';
+
+        // List of file names and their associated pictures
+        var files = {
+            "b010_col1_A2.out.txt": "b003_col1_A2.jpg",
+            "b017_col2_A2.out.txt": "b005_col2_A2.jpg",
+            // Add more file names and image names as needed
+        };
+
+        var found = false;
+
+        for (var file in files) {
+            if (file.toLowerCase().indexOf(searchText) !== -1) {
+                found = true;
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', file, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var textContent = xhr.responseText;
+                        var imageSrc = files[file];
+                        resultDiv.innerHTML += '<div><h2>' + file + '</h2><p>' + textContent + '</p><img src="' + imageSrc + '" alt="Associated Image"></div>';
+                    }
+                };
+                xhr.send();
+            }
+        }
+
+        if (!found) {
+            resultDiv.innerHTML = "No matching files found.";
+        }
+    }
+</script>
+</body>
+</html>
